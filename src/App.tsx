@@ -1,60 +1,58 @@
 /**
- * Main takeaway: React passes event information into the onClick
- *  handler function which you pass to default JSX elements.
+ * Main takeaway: a higher order function is 'a function that returns
+ *  a function' - and so its return value COULD potentially be assigned
+ *  as an onClick prop.
  *
- * Task: experiment with React's MouseEvent
+ * Task: refactor to use the makeClickHandler
  *
- * Success: explain why we:
- *  - CANNOT pass handleWithStringParameter to button onClick
- *  - CAN pass handleWithFancyParameter to button onClick
- *
- * (Bonus: explain why we CAN pass handleWithNoParameter)
+ * Success: explain why:
+ *  - shoutString('hi') CANNOT be passed to onClick
+ *  - logStringLowercase('hi') CANNOT be passed to onClick
+ *  - makeClickHandler('hi') CAN be passed to onClick
  */
 
 function App() {
-  const handleWithNoParameter = () => console.log("success!");
-  const handleWithStringParameter = (msg: string) => console.log(msg);
-  const handleWithFancyParameter = (e: React.MouseEvent) => console.log(e);
+  // returns a string, no side-effects
+  const shoutString = (message: string) => {
+    return `${message.toUpperCase()}!!!!!!`;
+  };
+
+  // no return, side-effect: prints something
+  const logStringLowercase = (message: string) => {
+    console.log(message.toLowerCase());
+  };
+
+  // returns a function!
+  const makeClickHandler = (message: string) => {
+    return () => {
+      // returned function will print message twice
+      console.log("once:", message);
+      console.log("twice:", message);
+    };
+  };
 
   return (
     <div>
       <h1>My buttons</h1>
       <button
-        onClick={(weirdThing) => {
-          /**
-           * Two ways in which we can learn about weirdThing:
-           *
-           * 1. log it out
-           * 2. hover over it in VS code
-           *
-           * It's something that can be referred to as a
-           *  'Synthetic Event', and is typed as:
-           *  React.MouseEvent<HTMLButtonElement, MouseEvent>
-           *
-           * It looks like a weird complicated typing.
-           *  Don't worry about understanding what it looks like.
-           *
-           * The important thing is: _it is typed_. It won't allow
-           *  absolutely _anything_.
-           */
-
-          // prohibitively large confusing object
-          console.log("too much stuff:", weirdThing);
-          // this one might be more interesting
-          console.log("an interesting part:", weirdThing.target);
-
-          // de-comment below - TypeScript will save us from a typo!
-          // console.log("inspect timeStamp", weirdThing.timestamp)
+        onClick={() => {
+          console.log("once:", "happy");
+          console.log("twice:", "happy");
         }}
       >
-        Log React's MouseEvent
+        Log 'happy' twice
       </button>
-      {/*
-        Try passing each of the function references above:
-          - handleWithStringParameter
-          - handleWithFancyParameter
-      */}
-      <button onClick={handleWithNoParameter}>Experimental button</button>
+      <button
+        onClick={() => {
+          console.log("once:", "sad");
+          console.log("twice:", "sad");
+        }}
+      >
+        Log 'sad' twice
+      </button>
+      <button onClick={makeClickHandler("indifferent")}>
+        Log 'indifferent' twice
+      </button>
     </div>
   );
 }
