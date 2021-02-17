@@ -3,6 +3,7 @@
  *  - a child can be in charge of an onClick, or a parent can
  *  - you can pass functions down as props to children
  *  - onClick DOES NOT exist by default on custom components
+ *  - onClick on a custom component is like any other prop
  *
  * Task: run the app and play around with it.
  *   - try to break it: mess around with props
